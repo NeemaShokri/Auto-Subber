@@ -1,1 +1,4 @@
-requests
+google.cloud
+configparser
+io
+six
