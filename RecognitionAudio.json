@@ -1,0 +1,7 @@
+{
+
+  // Union field audio_source can be only one of the following:
+  "content": string, // CONVERT AUDIO FILE INTO BYTES AS base64-encoded string
+  "uri": string // ONLY GOOGLE URIS ARE SUPPORTED
+  // End of list of possible types for union field audio_source.
+}
