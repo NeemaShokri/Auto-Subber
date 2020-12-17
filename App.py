@@ -1,5 +1,6 @@
 import tkinter as tk
 from GUI import Application
+import requests
 
 #TK
 window = tk.Tk()

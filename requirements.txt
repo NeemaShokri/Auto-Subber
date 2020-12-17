@@ -2,3 +2,6 @@ google.cloud
 configparser
 io
 six
+tkinter
+moviepy
+google-cloud-speech

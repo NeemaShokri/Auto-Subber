@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog as explorer
+import moviepy.editor as mp
 
 class Application(tk.Frame):
 
@@ -68,9 +69,11 @@ class Application(tk.Frame):
         gen_srt.pack(side = "bottom")
 
     def generte_srt(self):
-        print("File Path: ")
+        print("File Path: " + self.file["text"])
         print("Input Language: " + self.lang_in.get())
         print("Output Language: " + self.lang_out.get())
+        clip = mp.VideoFileClip(self.file["text"])
+        clip.audio.write_audiofile("Audio.mp3")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()
