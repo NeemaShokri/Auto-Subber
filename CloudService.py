@@ -1,5 +1,6 @@
 import requests
 from configparser import ConfigParser
+from google.cloud import speech
 
 config = ConfigParser()
 config.read('config.ini')
