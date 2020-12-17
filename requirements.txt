@@ -5,3 +5,4 @@ six
 tkinter
 moviepy
 google-cloud-speech
+moviepy

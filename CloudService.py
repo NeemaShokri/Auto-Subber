@@ -32,7 +32,9 @@ class Cloud:
             encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
             sample_rate_hertz=16000,
             audio_channel_count=2,
-            language_code=language_code
+            language_code=language_code,
+            enable_word_time_offsets=True,
+            enable_automatic_punctuation=True
         )
 
         operation = client.long_running_recognize(config=config, audio=audio)
@@ -40,16 +42,23 @@ class Cloud:
         print("Waiting for operation to complete...")
         response = operation.result(timeout=90)
 
-        complete_text = ''
+        complete_text = []
 
-        # Each result is for a consecutive portion of the audio. Iterate through
-        # them to get the transcripts for the entire audio file.
         for result in response.results:
-            complete_text += result.alternatives[0].transcript
+            alternative = result.alternatives[0]
+            print("Transcript: {}".format(alternative.transcript))
+            print("Confidence: {}".format(alternative.confidence))
 
-            # The first alternative is the most likely one for this portion.
-            print(u"Transcript: {}".format(result.alternatives[0].transcript))
-            print("Confidence: {}".format(result.alternatives[0].confidence))
+            for word_info in alternative.words:
+                word = word_info.word
+                start_time = word_info.start_time
+                end_time = word_info.end_time
+
+                complete_text.append({'word': word, 'start': start_time, 'end': end_time})
+
+                print(
+                    f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
+                )
         
         return complete_text
 
