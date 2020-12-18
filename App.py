@@ -1,6 +1,6 @@
 import tkinter as tk
 from GUI import Application
-import requests
+import json
 
 #TK
 window = tk.Tk()

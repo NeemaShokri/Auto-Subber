@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog as explorer
 import moviepy.editor as mp
+import json
 
 class Application(tk.Frame):
 
@@ -10,6 +11,8 @@ class Application(tk.Frame):
         self.file = None
         self.lang_in = None
         self.lang_out = None
+        self.language = json.load(open('languages.json'))
+        print(type(self.language))
         self.master = master
         self.pack()
         self.create_widgets()
@@ -41,7 +44,7 @@ class Application(tk.Frame):
         lang_in_label = tk.Label(master = lang_in_frame, text = "Choose Language of .MP4")
         lang_in_label.pack(side = "left")
 
-        languages = ["English", "Spanish", "French"]
+        languages = list (self.language.keys())
         self.lang_in = tk.StringVar(master = lang_in_frame)
         self.lang_in.set(languages[0])
 
