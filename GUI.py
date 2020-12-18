@@ -3,6 +3,10 @@ import tkinter.font as tkFont
 import tkinter.filedialog as explorer
 import moviepy.editor as mp
 import json
+from CloudService import Cloud
+
+from os import path
+from pydub import AudioSegment
 
 class Application(tk.Frame):
 
@@ -75,8 +79,23 @@ class Application(tk.Frame):
         print("File Path: " + self.file["text"])
         print("Input Language: " + self.lang_in.get())
         print("Output Language: " + self.lang_out.get())
-        clip = mp.VideoFileClip(self.file["text"])
-        clip.audio.write_audiofile("Audio.mp3")
+
+        #video = mp.VideoFileClip(self.file["text"])
+        #audio_file = video.audio.write_audiofile("Audio.mp3")
+        
+        src = "Audio.mp3"
+        dst = "Audio.wav"
+
+        # convert wav to mp3
+        AudioSegment.converter = R"C:\Users\Neema\AppData\Local\Programs\Python\Python39\Lib\site-packages\ffmpeg"                                          
+        sound = AudioSegment.from_mp3(src)
+        sound.export(dst, format="wav")
+
+        #mp3 = AudioSegment.from_mp3("Audio.mp3")
+        #mp3.export("Audio.wav", format="wav")
+
+        #cloud = Cloud()
+        #cloud.audio_to_text("Audio.mp3", self.language[self.lang_in.get()])
 
     def browse_files(self):
         file_name = explorer.askopenfilename()

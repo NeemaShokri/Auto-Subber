@@ -9,11 +9,12 @@ class Cloud:
 
     def __init__(self):
         # Read in api key from config file
-        config = ConfigParser()
-        config.read('config.ini')
+        #config = ConfigParser()
+        #config.read('config.ini')
 
-        self.api_key = config['account']['api_key']
-        print(self.api_key)
+        #self.api_key = config['account']['api_key']
+        pass
+        #print(self.api_key)
 
     def audio_to_text(self, speech_file, language_code: str) -> str:
         """Transcribe the given audio file asynchronously."""
