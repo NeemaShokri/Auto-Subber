@@ -1,7 +1,9 @@
 from configparser import ConfigParser
-from google.cloud import speech
 import six
+
+from google.cloud import speech
 from google.cloud import translate_v2 as translate
+from google.cloud import storage
 
 import io
 
@@ -18,6 +20,8 @@ class Cloud:
     def audio_to_text(self, speech_file, language_code: str) -> str:
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
+
+        self.upload('async-audio-file', speech_file, 'test/' + speech_file)
 
         with io.open(speech_file, "rb") as audio_file:
             content = audio_file.read()
@@ -82,3 +86,21 @@ class Cloud:
         print(u"Text: {}".format(result["input"]))
         print(u"Translation: {}".format(result["translatedText"]))
         print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
+
+    def upload(self, bucket_name, source_file_name, destination_name):
+        """Uploads a file to the bucket."""
+        storage_client = storage.Client()
+        bucket = storage_client.get_bucket(bucket_name)
+        blob = bucket.blob(destination_name)
+
+        blob.upload_from_filename(source_file_name)
+
+        return destination_name
+
+    def delete_blob(self, bucket_name, blob_name):
+        """Deletes a blob from the bucket."""
+        storage_client = storage.Client()
+        bucket = storage_client.get_bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+
+        blob.delete()
