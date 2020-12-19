@@ -83,19 +83,16 @@ class Application(tk.Frame):
         #video = mp.VideoFileClip(self.file["text"])
         #audio_file = video.audio.write_audiofile("Audio.mp3")
         
-        src = "Audio.mp3"
+        src = "D:\Documents\Repositories\Personal\Auto-Subber\Audio.mp3"
         dst = "Audio.wav"
 
         # convert wav to mp3
-        AudioSegment.converter = R"C:\Users\Neema\AppData\Local\Programs\Python\Python39\Lib\site-packages\ffmpeg"                                          
-        sound = AudioSegment.from_mp3(src)
-        sound.export(dst, format="wav")
 
         #mp3 = AudioSegment.from_mp3("Audio.mp3")
         #mp3.export("Audio.wav", format="wav")
 
-        #cloud = Cloud()
-        #cloud.audio_to_text("Audio.mp3", self.language[self.lang_in.get()])
+        cloud = Cloud()
+        cloud.audio_to_text("Audio.mp3", "en-US")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()

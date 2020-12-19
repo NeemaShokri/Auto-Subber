@@ -2,6 +2,7 @@ from configparser import ConfigParser
 from google.cloud import speech
 import six
 from google.cloud import translate_v2 as translate
+from google.cloud import speech_v1p1beta1
 
 import io
 
@@ -30,7 +31,7 @@ class Cloud:
         audio = speech.RecognitionAudio(content=content)
 
         config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+            #encoding=speech.RecognitionConfig.AudioEncoding.AMR_WB,
             sample_rate_hertz=16000,
             audio_channel_count=2,
             language_code=language_code,
