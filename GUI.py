@@ -2,6 +2,11 @@ import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog as explorer
 import moviepy.editor as mp
+import json
+from CloudService import Cloud
+
+from os import path
+from pydub import AudioSegment
 
 class Application(tk.Frame):
 
@@ -10,6 +15,8 @@ class Application(tk.Frame):
         self.file = None
         self.lang_in = None
         self.lang_out = None
+        self.language = json.load(open('languages.json'))
+        print(type(self.language))
         self.master = master
         self.pack()
         self.create_widgets()
@@ -41,7 +48,7 @@ class Application(tk.Frame):
         lang_in_label = tk.Label(master = lang_in_frame, text = "Choose Language of .MP4")
         lang_in_label.pack(side = "left")
 
-        languages = ["English", "Spanish", "French"]
+        languages = list (self.language.keys())
         self.lang_in = tk.StringVar(master = lang_in_frame)
         self.lang_in.set(languages[0])
 
@@ -72,8 +79,20 @@ class Application(tk.Frame):
         print("File Path: " + self.file["text"])
         print("Input Language: " + self.lang_in.get())
         print("Output Language: " + self.lang_out.get())
-        clip = mp.VideoFileClip(self.file["text"])
-        clip.audio.write_audiofile("Audio.mp3")
+
+        #video = mp.VideoFileClip(self.file["text"])
+        #audio_file = video.audio.write_audiofile("Audio.mp3")
+        
+        src = "D:\Documents\Repositories\Personal\Auto-Subber\Audio.mp3"
+        dst = "Audio.wav"
+
+        # convert wav to mp3
+
+        #mp3 = AudioSegment.from_mp3("Audio.mp3")
+        #mp3.export("Audio.wav", format="wav")
+
+        cloud = Cloud()
+        cloud.audio_to_text("Audio.mp3", "en-US")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()

@@ -5,17 +5,20 @@ from google.cloud import speech
 from google.cloud import translate_v2 as translate
 from google.cloud import storage
 
+from google.cloud import speech_v1p1beta1
+
 import io
 
 class Cloud:
 
     def __init__(self):
         # Read in api key from config file
-        config = ConfigParser()
-        config.read('config.ini')
+        #config = ConfigParser()
+        #config.read('config.ini')
 
-        self.api_key = config['account']['api_key']
-        print(self.api_key)
+        #self.api_key = config['account']['api_key']
+        pass
+        #print(self.api_key)
 
     def audio_to_text(self, speech_file, language_code: str) -> str:
         """Transcribe the given audio file asynchronously."""
@@ -33,7 +36,7 @@ class Cloud:
         audio = speech.RecognitionAudio(content=content)
 
         config = speech.RecognitionConfig(
-            encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+            #encoding=speech.RecognitionConfig.AudioEncoding.AMR_WB,
             sample_rate_hertz=16000,
             audio_channel_count=2,
             language_code=language_code,
