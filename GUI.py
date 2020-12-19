@@ -1,12 +1,12 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog as explorer
-import moviepy.editor as mp
+#import moviepy.editor as mp
 import json
 from CloudService import Cloud
 
 from os import path
-from pydub import AudioSegment
+#from pydub import AudioSegment
 
 class Application(tk.Frame):
 
@@ -83,7 +83,7 @@ class Application(tk.Frame):
         #video = mp.VideoFileClip(self.file["text"])
         #audio_file = video.audio.write_audiofile("Audio.mp3")
         
-        src = "D:\Documents\Repositories\Personal\Auto-Subber\Audio.mp3"
+        src = r"C:\Users\nshok\Desktop\Code\Auto Anime Subber\Auto-Subber\Audio.mp3"
         dst = "Audio.wav"
 
         # convert wav to mp3

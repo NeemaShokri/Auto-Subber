@@ -24,16 +24,18 @@ class Cloud:
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
-        self.upload('async-audio-file', speech_file, 'test/' + speech_file)
+        self.upload('async_audio_files', speech_file, 'test/' + speech_file)
 
+        '''
         with io.open(speech_file, "rb") as audio_file:
             content = audio_file.read()
+        '''
 
         """
          Note that transcription is limited to a 60 seconds audio file.
          Use a GCS file for audio longer than 1 minute.
         """
-        audio = speech.RecognitionAudio(content=content)
+        audio = speech.RecognitionAudio(uri='gs://async_audio_files/' + speech_file)
 
         config = speech.RecognitionConfig(
             #encoding=speech.RecognitionConfig.AudioEncoding.AMR_WB,
