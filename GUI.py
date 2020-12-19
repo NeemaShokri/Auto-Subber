@@ -3,11 +3,12 @@ import tkinter.font as tkFont
 import tkinter.filedialog as explorer
 #import moviepy.editor as mp
 import json
-from CloudService import Cloud
+#from CloudService import Cloud
 from tkinter.ttk import Combobox
+import wave
 
-from os import path
-#from pydub import AudioSegment
+#from os import path
+from pydub import AudioSegment
 
 class Application(tk.Frame):
 
@@ -90,10 +91,28 @@ class Application(tk.Frame):
 
         #mp3 = AudioSegment.from_mp3("Audio.mp3")
         #mp3.export("Audio.wav", format="wav")
-
-        cloud = Cloud()
-        cloud.audio_to_text("Audio.mp3", "en-US")
+        self.mp3_to_wav(r"Audio.mp3")
+        #cloud = Cloud()
+        #cloud.audio_to_text("Audio.mp3", "en-US")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()
         self.file.configure(text = file_name)
+
+    def mp3_to_wav(self, audio_file_name):
+        if audio_file_name.split('.')[1] == 'mp3':
+            a = AudioSegment()
+            sound = AudioSegment.from_mp3(audio_file_name)
+            audio_file_name = audio_file_name.split('.')[0] + '.wav'
+            sound.export(audio_file_name, format="wav")
+
+    def stereo_to_mono(self, audio_file_name):
+        sound = AudioSegment.from_wav(audio_file_name)
+        sound = sound.set_channels(1)
+        sound.export(audio_file_name, format="wav")
+
+    def frame_rate_channel(self, audio_file_name):
+        with wave.open(audio_file_name, "rb") as wave_file:
+            frame_rate = wave_file.getframerate()
+            channels = wave_file.getnchannels()
+            return frame_rate, channels
