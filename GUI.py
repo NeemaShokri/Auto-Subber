@@ -4,6 +4,7 @@ import tkinter.filedialog as explorer
 #import moviepy.editor as mp
 import json
 from CloudService import Cloud
+from tkinter.ttk import Combobox
 
 from os import path
 #from pydub import AudioSegment
@@ -40,7 +41,7 @@ class Application(tk.Frame):
         fileBrowse = tk.Button(master = file_frame, text = "Browse", command = self.browse_files)
         fileBrowse.pack(side = "left")
         
-        file_frame.pack()
+        file_frame.pack(pady=10)
         
         #Frame for choosing language the video is in
         lang_in_frame = tk.Frame(master = self)
@@ -52,10 +53,11 @@ class Application(tk.Frame):
         self.lang_in = tk.StringVar(master = lang_in_frame)
         self.lang_in.set(languages[0])
 
-        lang_in_menu = tk.OptionMenu(lang_in_frame, self.lang_in, *languages)
+        lang_in_menu = Combobox(master = lang_in_frame, values = languages)
+        lang_in_menu.set(languages[0])
         lang_in_menu.pack()
 
-        lang_in_frame.pack()
+        lang_in_frame.pack(pady=10)
 
         #Frame for choosing the language you want subtitles in
         lang_out_frame = tk.Frame(master = self)
@@ -65,15 +67,16 @@ class Application(tk.Frame):
 
         self.lang_out = tk.StringVar(master = lang_out_frame)
         self.lang_out.set(languages[0])
+        
+        lang_in_menu = Combobox(master = lang_out_frame, values = languages)
+        lang_in_menu.set(languages[0])
+        lang_in_menu.pack()
 
-        lang_out_menu = tk.OptionMenu(lang_out_frame, self.lang_out, *languages)
-        lang_out_menu.pack()
-
-        lang_out_frame.pack()
+        lang_out_frame.pack(pady=10)
 
         #Button to generate .SRT file
         gen_srt = tk.Button(master = self, text = "Generate .SRT", command = self.generte_srt)
-        gen_srt.pack(side = "bottom")
+        gen_srt.pack(side = "bottom", pady=10)
 
     def generte_srt(self):
         print("File Path: " + self.file["text"])

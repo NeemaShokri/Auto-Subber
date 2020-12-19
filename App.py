@@ -13,4 +13,5 @@ window.resizable(False, False)
 
 #Application
 app = Application(master = window)
+window.geometry("400x220")
 app.mainloop()
