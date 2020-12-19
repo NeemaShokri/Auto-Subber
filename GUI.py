@@ -82,9 +82,6 @@ class Application(tk.Frame):
 
         #video = mp.VideoFileClip(self.file["text"])
         #audio_file = video.audio.write_audiofile("Audio.mp3")
-        
-        src = r"C:\Users\nshok\Desktop\Code\Auto Anime Subber\Auto-Subber\Audio.mp3"
-        dst = "Audio.wav"
 
         # convert wav to mp3
 

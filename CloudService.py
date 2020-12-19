@@ -24,7 +24,7 @@ class Cloud:
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
-        self.upload('async_audio_files', speech_file, 'test/' + speech_file)
+        self.upload('async_audio_files', speech_file, speech_file)
 
         '''
         with io.open(speech_file, "rb") as audio_file:
