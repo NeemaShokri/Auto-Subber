@@ -3,7 +3,7 @@ import tkinter.font as tkFont
 import tkinter.filedialog as explorer
 #import moviepy.editor as mp
 import json
-#from CloudService import Cloud
+from CloudService import Cloud
 from tkinter.ttk import Combobox
 import wave
 
@@ -91,9 +91,9 @@ class Application(tk.Frame):
 
         #mp3 = AudioSegment.from_mp3("Audio.mp3")
         #mp3.export("Audio.wav", format="wav")
-        self.mp3_to_wav(r"Audio.mp3")
-        #cloud = Cloud()
-        #cloud.audio_to_text("Audio.mp3", "en-US")
+        #self.mp3_to_wav(r"Audio.mp3")
+        cloud = Cloud()
+        cloud.audio_to_text("Audio.mp3", "en-US")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()

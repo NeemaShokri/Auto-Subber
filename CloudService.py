@@ -2,12 +2,13 @@ from configparser import ConfigParser
 import six
 
 from google.cloud import speech
-from google.cloud import translate_v2 as translate
+#from google.cloud import translate_v2 as translate
 from google.cloud import storage
 
 from google.cloud import speech_v1p1beta1
 
 import io
+import time
 
 class Cloud:
 
@@ -20,7 +21,7 @@ class Cloud:
         pass
         #print(self.api_key)
 
-    def audio_to_text(self, speech_file, language_code: str) -> str:
+    def audio_to_text(self, speech_file, language_code: str):
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
@@ -38,7 +39,7 @@ class Cloud:
         audio = speech.RecognitionAudio(uri='gs://async_audio_files/' + speech_file)
 
         config = speech.RecognitionConfig(
-            #encoding=speech.RecognitionConfig.AudioEncoding.AMR_WB,
+            #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
             sample_rate_hertz=16000,
             audio_channel_count=2,
             language_code=language_code,
@@ -49,31 +50,39 @@ class Cloud:
         operation = client.long_running_recognize(config=config, audio=audio)
 
         print("Waiting for operation to complete...")
-        response = operation.result(timeout=90)
+        response = operation.result(timeout=300)
 
-        complete_text = []
+        srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
+        
+        sequence = 1
 
         for result in response.results:
             alternative = result.alternatives[0]
-            print("Transcript: {}".format(alternative.transcript))
-            print("Confidence: {}".format(alternative.confidence))
-
-            for word_info in alternative.words:
-                word = word_info.word
-                start_time = word_info.start_time
-                end_time = word_info.end_time
-
-                complete_text.append({'word': word, 'start': start_time, 'end': end_time})
-
-                print(
-                    f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
-                )
+            start_time = alternative.words[0].start_time
+            end_time = alternative.words[-1].end_time
+            
+            srt_file.write(str (sequence) + "\n")
+            srt_file.write("0" + str (start_time) + " --> " + str (end_time) + "\n")
+            srt_file.write(alternative.transcript + "\n" + "\n")
+            sequence += 1
         
-        return complete_text
+        srt_file.close()
+
+        '''
+        for word_info in alternative.words:
+            word = word_info.word
+            start_time = word_info.start_time
+            end_time = word_info.end_time
+
+            complete_text.append({'word': word, 'start': start_time, 'end': end_time})
+
+            print(
+                f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
+            )
+        '''
 
     def translate(self, text: str, source_language: str, target_language: str) -> str:
         """Translates text into the target language.
-
         Target must be an ISO 639-1 language code.
         See https://g.co/cloud/translate/v2/translate-reference#supported_languages
         """
