@@ -40,11 +40,10 @@ class Cloud:
 
         config = speech.RecognitionConfig(
             #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
-            sample_rate_hertz=16000,
-            audio_channel_count=2,
-            language_code=language_code,
-            enable_word_time_offsets=True,
-            enable_automatic_punctuation=True
+            #sample_rate_hertz = 44100,
+            language_code = language_code,
+            enable_word_time_offsets = True,
+            enable_automatic_punctuation = True
         )
 
         operation = client.long_running_recognize(config=config, audio=audio)
@@ -58,28 +57,17 @@ class Cloud:
 
         for result in response.results:
             alternative = result.alternatives[0]
-            start_time = alternative.words[0].start_time
-            end_time = alternative.words[-1].end_time
+            start_time = str (alternative.words[0].start_time)
+            end_time = str (alternative.words[-1].end_time)
             
             srt_file.write(str (sequence) + "\n")
-            srt_file.write("0" + str (start_time) + " --> " + str (end_time) + "\n")
+            srt_file.write(self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n")
             srt_file.write(alternative.transcript + "\n" + "\n")
             sequence += 1
         
         srt_file.close()
 
-        '''
-        for word_info in alternative.words:
-            word = word_info.word
-            start_time = word_info.start_time
-            end_time = word_info.end_time
-
-            complete_text.append({'word': word, 'start': start_time, 'end': end_time})
-
-            print(
-                f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
-            )
-        '''
+        print("Done Transcribing .SRT")
 
     def translate(self, text: str, source_language: str, target_language: str) -> str:
         """Translates text into the target language.
@@ -118,3 +106,13 @@ class Cloud:
         blob = bucket.blob(blob_name)
 
         blob.delete()
+
+    def format_time_stamp(self, time_stamp):
+        time_stamp = "0" + time_stamp
+        if (len(time_stamp) == 8):
+            time_stamp += ",000"
+        else:
+            time_stamp = time_stamp.replace(".", ",")
+            time_stamp = time_stamp[0:12]
+
+        return time_stamp
