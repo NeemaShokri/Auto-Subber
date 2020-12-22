@@ -46,6 +46,9 @@ class Application(tk.Frame):
 
         # Frame for choosing language the video is in
         lang_in_frame = tk.Frame(master=self)
+        lang_in_label = tk.Label(master=lang_in_frame, text="Choose Language of .MP4")
+        lang_in_label.pack(side="left")
+
 
         languages = list (self.language.keys())
         #self.lang_in = tk.StringVar(master = lang_in_frame)
