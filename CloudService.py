@@ -41,10 +41,7 @@ class Cloud:
 
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
-
-        srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
-
-
+        
         srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
 
         sequence = 1
