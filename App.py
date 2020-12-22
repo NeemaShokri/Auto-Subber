@@ -3,7 +3,7 @@ from GUI import Application
 import json
 import os
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\nshok\Desktop\Code\Auto Anime Subber\Auto-Subber\stt_key.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\Documents\Repositories\Personal\Auto-Subber\stt_key.json"
 print(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 
 #TK
