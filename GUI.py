@@ -82,8 +82,8 @@ class Application(tk.Frame):
 
     def generte_srt(self):
         print("File Path: " + self.file["text"])
-        print("Input Language: " + self.lang_in.get())
-        print("Output Language: " + self.lang_out.get())
+        print("Input Language: " + self.lang_in.get() + " Language Code: " + self.language[self.lang_in.get()])
+        print("Output Language: " + self.lang_out.get() + " Language Code: " + self.language[self.lang_out.get()])
 
         #video = mp.VideoFileClip(self.file["text"])
         #audio_file = video.audio.write_audiofile("Audio.mp3")

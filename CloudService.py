@@ -39,7 +39,7 @@ class Cloud:
 
         config = speech.RecognitionConfig(
             #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
-            #sample_rate_hertz = 44100,
+            sample_rate_hertz = 44100,
             language_code = language_code,
             enable_word_time_offsets = True,
             enable_automatic_punctuation = True
