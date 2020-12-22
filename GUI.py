@@ -18,7 +18,6 @@ class Application(tk.Frame):
         self.lang_in = None
         self.lang_out = None
         self.language = json.load(open('languages.json'))
-        print(type(self.language))
         self.master = master
         self.pack()
         self.create_widgets()
@@ -51,12 +50,13 @@ class Application(tk.Frame):
         lang_in_label.pack(side = "left")
 
         languages = list (self.language.keys())
-        self.lang_in = tk.StringVar(master = lang_in_frame)
-        self.lang_in.set(languages[0])
+        #self.lang_in = tk.StringVar(master = lang_in_frame)
+        #self.lang_in.set(languages[0])
 
         lang_in_menu = Combobox(master = lang_in_frame, values = languages)
         lang_in_menu.set(languages[0])
         lang_in_menu.pack()
+        self.lang_in = lang_in_menu
 
         lang_in_frame.pack(pady=10)
 
@@ -66,12 +66,13 @@ class Application(tk.Frame):
         lang_out_label = tk.Label(master = lang_out_frame, text = "Choose Language of Subtitles")
         lang_out_label.pack(side = "left")
 
-        self.lang_out = tk.StringVar(master = lang_out_frame)
-        self.lang_out.set(languages[0])
+        #self.lang_out = tk.StringVar(master = lang_out_frame)
+        #self.lang_out.set(languages[0])
         
-        lang_in_menu = Combobox(master = lang_out_frame, values = languages)
-        lang_in_menu.set(languages[0])
-        lang_in_menu.pack()
+        lang_out_menu = Combobox(master = lang_out_frame, values = languages)
+        lang_out_menu.set(languages[0])
+        lang_out_menu.pack()
+        self.lang_out = lang_out_menu
 
         lang_out_frame.pack(pady=10)
 

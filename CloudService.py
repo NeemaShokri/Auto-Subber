@@ -1,12 +1,9 @@
 from configparser import ConfigParser
 import six
-
 from google.cloud import speech
 #from google.cloud import translate_v2 as translate
 from google.cloud import storage
-
 from google.cloud import speech_v1p1beta1
-
 import io
 import time
 
@@ -21,7 +18,7 @@ class Cloud:
         pass
         #print(self.api_key)
 
-    def audio_to_text(self, speech_file, language_code: str):
+    def audio_to_text(self, speech_file, language_code):
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
@@ -36,7 +33,9 @@ class Cloud:
          Note that transcription is limited to a 60 seconds audio file.
          Use a GCS file for audio longer than 1 minute.
         """
-        audio = speech.RecognitionAudio(uri='gs://async_audio_files/' + speech_file)
+        uri = 'gs://async_audio_files/' + speech_file
+        print("uri: " + uri)
+        audio = speech.RecognitionAudio(uri = uri)
 
         config = speech.RecognitionConfig(
             #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
@@ -50,6 +49,7 @@ class Cloud:
 
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
+        print("Responses: " + str (len(response.results)))
 
         srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
         
