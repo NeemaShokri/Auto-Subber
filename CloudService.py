@@ -1,5 +1,7 @@
 import six
 import os
+import datetime
+
 from google.cloud import speech
 from google.cloud import translate_v2 as translate
 from google.cloud import storage
@@ -17,6 +19,7 @@ class Cloud:
 
         client = speech.SpeechClient()
         file_name = speech_file.split("/")[-1]
+
         print("file_name: " + file_name)
         self.upload('async_audio_files', speech_file, file_name)
         
@@ -45,8 +48,6 @@ class Cloud:
 
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
-
-        srt_file = open(speech_file.replace(".mp3", ".srt"), "wb")
         
         if (os.path.exists(speech_file)):
             os.remove(speech_file)
@@ -55,19 +56,58 @@ class Cloud:
 
         for result in response.results:
             alternative = result.alternatives[0]
+            text = alternative.transcript
             start_time = str (alternative.words[0].start_time)
             end_time = str (alternative.words[-1].end_time)
-            
-            srt_file.write(bytes((str (sequence) + "\n").encode("utf-8")))
-            srt_file.write(bytes((self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n").encode("utf-8")))
-            srt_file.write(bytes((self.translate(alternative.transcript) + "\n" + "\n").encode("utf-8")))
 
-            sequence += 1
-        
-        srt_file.close()
+            sec_start_time = alternative.words[0].start_time.total_seconds()
+            sec_end_time = alternative.words[-1].end_time.total_seconds()
+
+            half_time = int(((sec_end_time - sec_start_time) / 2) + sec_start_time)
+            half_time = str(datetime.timedelta(seconds = half_time))
+
+            # Split up if too long
+            if len(text) > 100:
+                # Find nearest punctuation
+                i = 0
+                half = int(len(text) / 2)
+                while 0 <= i < len(text):
+                    if text[half - i] == '.' or text[half - i] == '?':
+                        first_half = text[0:half - i + 1]
+                        second_half = text[half - i + 1:]
+
+                        self.write_to_file(speech_file, first_half, start_time, half_time, sequence)
+                        sequence += 1
+
+                        self.write_to_file(speech_file, second_half, half_time, end_time, sequence)
+                        sequence += 1
+                        break
+                    elif text[half + i] == '.' or text[half + i] == '?':
+                        first_half = text[0:half + i + 1]
+                        second_half = text[half + i + 1:]
+
+                        self.write_to_file(speech_file, first_half, start_time, half_time, sequence)
+                        sequence += 1
+
+                        self.write_to_file(speech_file, second_half, half_time, end_time, sequence)
+                        sequence += 1
+                        break
+                    i += 1
+            else:
+                self.write_to_file(speech_file, text, start_time, end_time, sequence)
+                sequence += 1
 
         self.delete_blob('async_audio_files', file_name)
         print("Done Transcribing .SRT")
+
+    def write_to_file(self, speech_file, text, start_time, end_time, sequence):
+        srt_file = open(speech_file.replace(".mp3", ".srt"), "ab")
+
+        srt_file.write(bytes((str(sequence) + "\n").encode("utf-8")))
+        srt_file.write(bytes((self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n").encode("utf-8")))
+        srt_file.write(bytes((self.translate(text) + "\n" + "\n").encode("utf-8")))
+
+        srt_file.close()
 
     def translate(self, text: str) -> str:
         """Translates text into the target language.
