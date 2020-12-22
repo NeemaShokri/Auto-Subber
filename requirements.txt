@@ -1,8 +1,5 @@
-google.cloud
-io
-six
-tkinter
-moviepy
-google-cloud-speech
-pydub
-ffmpeg
+google-cloud-speech==2.0.1
+six==1.15.0
+moviepy==1.0.3
+google-cloud-storage==1.35.0
+pydub==0.24.1

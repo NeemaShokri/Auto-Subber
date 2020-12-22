@@ -1,17 +1,16 @@
 import six
 
-from google.cloud import speech
 from google.cloud import translate_v2 as translate
 from google.cloud import storage
 
 from google.cloud import speech
-
 
 class Cloud:
 
     def __init__(self, in_language, out_language):
         self.in_language = in_language
         self.out_language = out_language
+
 
     def audio_to_text(self, speech_file):
         """Transcribe the given audio file asynchronously."""
@@ -45,10 +44,14 @@ class Cloud:
 
         srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
 
+
+        srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
+
         sequence = 1
 
         for result in response.results:
             alternative = result.alternatives[0]
+
             start_time = str(alternative.words[0].start_time)
             end_time = str(alternative.words[-1].end_time)
 
