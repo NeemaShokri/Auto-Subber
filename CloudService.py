@@ -1,9 +1,9 @@
 import six
 
+from google.cloud import speech
 from google.cloud import translate_v2 as translate
 from google.cloud import storage
 
-from google.cloud import speech
 
 class Cloud:
 
@@ -11,8 +11,7 @@ class Cloud:
         self.in_language = in_language
         self.out_language = out_language
 
-
-    def audio_to_text(self, speech_file):
+    def audio_to_text(self, speech_file, language_code):
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
@@ -27,14 +26,16 @@ class Cloud:
          Note that transcription is limited to a 60 seconds audio file.
          Use a GCS file for audio longer than 1 minute.
         """
-        audio = speech.RecognitionAudio(uri='gs://async_audio_files/' + speech_file)
+        uri = 'gs://async_audio_files/' + speech_file
+        print("uri: " + uri)
+        audio = speech.RecognitionAudio(uri = uri)
 
         config = speech.RecognitionConfig(
-            # encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
-            # sample_rate_hertz = 44100,
-            language_code=self.in_language,
-            enable_word_time_offsets=True,
-            enable_automatic_punctuation=True
+            #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+            sample_rate_hertz = 44100,
+            language_code = language_code,
+            enable_word_time_offsets = True,
+            enable_automatic_punctuation = True
         )
 
         operation = client.long_running_recognize(config=config, audio=audio)
@@ -43,29 +44,31 @@ class Cloud:
         response = operation.result(timeout=300)
 
         srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
-
+        
         sequence = 1
 
         for result in response.results:
             alternative = result.alternatives[0]
-
-            start_time = str(alternative.words[0].start_time)
-            end_time = str(alternative.words[-1].end_time)
-
-            srt_file.write(str(sequence) + "\n")
+            start_time = str (alternative.words[0].start_time)
+            end_time = str (alternative.words[-1].end_time)
+            
+            srt_file.write(str (sequence) + "\n")
             srt_file.write(self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n")
             srt_file.write(self.translate(alternative.transcript) + "\n" + "\n")
-            sequence += 1
 
+            sequence += 1
+        
         srt_file.close()
-        # self.delete_blob('async_audio_files', speech_file)
+
+        self.delete_blob('async_audio_files', speech_file)
         print("Done Transcribing .SRT")
 
-    def translate(self, text: str) -> str:
+    def translate(self, text: str, source_language: str, target_language: str) -> str:
         """Translates text into the target language.
         Target must be an ISO 639-1 language code.
         See https://g.co/cloud/translate/v2/translate-reference#supported_languages
         """
+
         if self.in_language == self.out_language:
             return text
 
@@ -76,14 +79,12 @@ class Cloud:
 
         # Text can also be a sequence of strings, in which case this method
         # will return a sequence of results for each text.
-        result = translate_client.translate(text, source_language=self.in_language,
-                                            target_language=self.out_language)
-
+        result = translate_client.translate(text, source_language=source_language,
+                                            target_language=target_language)
 
         print(u"Text: {}".format(result["input"]))
         print(u"Translation: {}".format(result["translatedText"]))
         print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
-
 
     def upload(self, bucket_name, source_file_name, destination_name):
         """Uploads a file to the bucket."""
