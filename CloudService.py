@@ -11,7 +11,7 @@ class Cloud:
         self.in_language = in_language
         self.out_language = out_language
 
-    def audio_to_text(self, speech_file, language_code):
+    def audio_to_text(self, speech_file):
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
 
@@ -33,7 +33,7 @@ class Cloud:
         config = speech.RecognitionConfig(
             #encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
             sample_rate_hertz = 44100,
-            language_code = language_code,
+            language_code = self.in_language,
             enable_word_time_offsets = True,
             enable_automatic_punctuation = True
         )
@@ -63,7 +63,7 @@ class Cloud:
         self.delete_blob('async_audio_files', speech_file)
         print("Done Transcribing .SRT")
 
-    def translate(self, text: str, source_language: str, target_language: str) -> str:
+    def translate(self, text: str) -> str:
         """Translates text into the target language.
         Target must be an ISO 639-1 language code.
         See https://g.co/cloud/translate/v2/translate-reference#supported_languages
@@ -79,8 +79,8 @@ class Cloud:
 
         # Text can also be a sequence of strings, in which case this method
         # will return a sequence of results for each text.
-        result = translate_client.translate(text, source_language=source_language,
-                                            target_language=target_language)
+        result = translate_client.translate(text, source_language=self.in_language,
+                                            target_language=self.out_language)
 
         print(u"Text: {}".format(result["input"]))
         print(u"Translation: {}".format(result["translatedText"]))
