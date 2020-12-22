@@ -14,9 +14,9 @@ class Cloud:
     def audio_to_text(self, speech_file):
         """Transcribe the given audio file asynchronously."""
         client = speech.SpeechClient()
-
-        self.upload('async_audio_files', speech_file, speech_file)
-
+        file_name = speech_file.split("\\")[-1]
+        self.upload('async_audio_files', speech_file, file_name)
+        pass
         '''
         with io.open(speech_file, "rb") as audio_file:
             content = audio_file.read()
@@ -26,7 +26,7 @@ class Cloud:
          Note that transcription is limited to a 60 seconds audio file.
          Use a GCS file for audio longer than 1 minute.
         """
-        uri = 'gs://async_audio_files/' + speech_file
+        uri = 'gs://async_audio_files/' + file_name
         print("uri: " + uri)
         audio = speech.RecognitionAudio(uri = uri)
 
@@ -43,7 +43,7 @@ class Cloud:
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
 
-        srt_file = open(speech_file.split(".")[0] + ".srt", "wb")
+        srt_file = open(speech_file.replace(".mp3", ".srt"), "wb")
         
         sequence = 1
 
@@ -60,7 +60,7 @@ class Cloud:
         
         srt_file.close()
 
-        self.delete_blob('async_audio_files', speech_file)
+        self.delete_blob('async_audio_files', file_name)
         print("Done Transcribing .SRT")
 
     def translate(self, text: str) -> str:
