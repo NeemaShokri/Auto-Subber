@@ -41,7 +41,7 @@ class Cloud:
 
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
-        
+
         srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
 
         sequence = 1
@@ -54,11 +54,11 @@ class Cloud:
 
             srt_file.write(str(sequence) + "\n")
             srt_file.write(self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n")
-            srt_file.write(translate(alternative.transcript) + "\n" + "\n")
+            srt_file.write(self.translate(alternative.transcript) + "\n" + "\n")
             sequence += 1
 
         srt_file.close()
-        self.delete_blob('async_audio_files', speech_file)
+        # self.delete_blob('async_audio_files', speech_file)
         print("Done Transcribing .SRT")
 
     def translate(self, text: str) -> str:
@@ -66,7 +66,7 @@ class Cloud:
         Target must be an ISO 639-1 language code.
         See https://g.co/cloud/translate/v2/translate-reference#supported_languages
         """
-        if (self.in_language == self.out_language):
+        if self.in_language == self.out_language:
             return text
 
         translate_client = translate.Client()
