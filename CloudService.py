@@ -43,7 +43,7 @@ class Cloud:
         print("Waiting for operation to complete...")
         response = operation.result(timeout=300)
 
-        srt_file = open(speech_file.split(".")[0] + ".srt", "w+")
+        srt_file = open(speech_file.split(".")[0] + ".srt", "wb")
         
         sequence = 1
 
@@ -52,9 +52,9 @@ class Cloud:
             start_time = str (alternative.words[0].start_time)
             end_time = str (alternative.words[-1].end_time)
             
-            srt_file.write(str (sequence) + "\n")
-            srt_file.write(self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n")
-            srt_file.write(self.translate(alternative.transcript) + "\n" + "\n")
+            srt_file.write(bytes((str (sequence) + "\n").encode("utf-8")))
+            srt_file.write(bytes((self.format_time_stamp(start_time) + " --> " + self.format_time_stamp(end_time) + "\n").encode("utf-8")))
+            srt_file.write(bytes((self.translate(alternative.transcript) + "\n" + "\n").encode("utf-8")))
 
             sequence += 1
         
@@ -79,12 +79,13 @@ class Cloud:
 
         # Text can also be a sequence of strings, in which case this method
         # will return a sequence of results for each text.
-        result = translate_client.translate(text, source_language=self.in_language,
-                                            target_language=self.out_language)
+        result = translate_client.translate(text, target_language=self.out_language[0:2])
 
         print(u"Text: {}".format(result["input"]))
         print(u"Translation: {}".format(result["translatedText"]))
         print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
+
+        return result["translatedText"]
 
     def upload(self, bucket_name, source_file_name, destination_name):
         """Uploads a file to the bucket."""

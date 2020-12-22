@@ -1,7 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.filedialog as explorer
-#import moviepy.editor as mp
+import moviepy.editor as mp
 import json
 from CloudService import Cloud
 from tkinter.ttk import Combobox
@@ -85,35 +85,15 @@ class Application(tk.Frame):
         print("Input Language: " + self.lang_in.get() + " Language Code: " + self.language[self.lang_in.get()])
         print("Output Language: " + self.lang_out.get() + " Language Code: " + self.language[self.lang_out.get()])
 
-        #video = mp.VideoFileClip(self.file["text"])
-        #audio_file = video.audio.write_audiofile("Audio.mp3")
+        #audio_file = self.video_to_mp3(self.file["text"])
 
-        # convert wav to mp3
-
-        #mp3 = AudioSegment.from_mp3("Audio.mp3")
-        #mp3.export("Audio.wav", format="wav")
-        #self.mp3_to_wav(r"Audio.mp3")
-        cloud = Cloud()
-        cloud.audio_to_text("Audio.mp3", "en-US")
+        cloud = Cloud(self.language[self.lang_in.get()], self.language[self.lang_out.get()])
+        cloud.audio_to_text("Audio.mp3")
 
     def browse_files(self):
         file_name = explorer.askopenfilename()
         self.file.configure(text = file_name)
 
-    def mp3_to_wav(self, audio_file_name):
-        if audio_file_name.split('.')[1] == 'mp3':
-            a = AudioSegment()
-            sound = AudioSegment.from_mp3(audio_file_name)
-            audio_file_name = audio_file_name.split('.')[0] + '.wav'
-            sound.export(audio_file_name, format="wav")
-
-    def stereo_to_mono(self, audio_file_name):
-        sound = AudioSegment.from_wav(audio_file_name)
-        sound = sound.set_channels(1)
-        sound.export(audio_file_name, format="wav")
-
-    def frame_rate_channel(self, audio_file_name):
-        with wave.open(audio_file_name, "rb") as wave_file:
-            frame_rate = wave_file.getframerate()
-            channels = wave_file.getnchannels()
-            return frame_rate, channels
+    def video_to_mp3(self, video_file):
+        video = mp.VideoFileClip(self.file["text"])
+        audio_file = video.audio.write_audiofile(video_file)
