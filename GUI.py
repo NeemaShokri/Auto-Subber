@@ -85,10 +85,10 @@ class Application(tk.Frame):
         print("Input Language: " + self.lang_in.get() + " Language Code: " + self.language[self.lang_in.get()])
         print("Output Language: " + self.lang_out.get() + " Language Code: " + self.language[self.lang_out.get()])
 
-        audio_file = self.video_to_mp3(self.file["text"])
+        audio = self.video_to_mp3(self.file["text"])
 
         cloud = Cloud(self.language[self.lang_in.get()], self.language[self.lang_out.get()])
-        cloud.audio_to_text(audio_file)
+        cloud.audio_to_text(audio)
 
     def browse_files(self):
         file_name = explorer.askopenfilename()
@@ -96,6 +96,7 @@ class Application(tk.Frame):
 
     def video_to_mp3(self, video_file):
         video = mp.VideoFileClip(video_file)
-        audio_file = video.audio.write_audiofile(video_file.split("\\")[-1].split(".")[0] + ".mp3")
+        audio_path = video_file.split(".")[0] + ".mp3"
+        video.audio.write_audiofile(audio_path)
 
-        return audio_file
+        return audio_path

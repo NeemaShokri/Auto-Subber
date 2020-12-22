@@ -1,5 +1,5 @@
 import six
-
+import os
 from google.cloud import speech
 from google.cloud import translate_v2 as translate
 from google.cloud import storage
@@ -13,10 +13,13 @@ class Cloud:
 
     def audio_to_text(self, speech_file):
         """Transcribe the given audio file asynchronously."""
+        print("speech_file: " + speech_file)
+
         client = speech.SpeechClient()
-        file_name = speech_file.split("\\")[-1]
+        file_name = speech_file.split("/")[-1]
+        print("file_name: " + file_name)
         self.upload('async_audio_files', speech_file, file_name)
-        pass
+        
         '''
         with io.open(speech_file, "rb") as audio_file:
             content = audio_file.read()
@@ -45,6 +48,9 @@ class Cloud:
 
         srt_file = open(speech_file.replace(".mp3", ".srt"), "wb")
         
+        if (os.path.exists(speech_file)):
+            os.remove(speech_file)
+
         sequence = 1
 
         for result in response.results:
