@@ -3,7 +3,9 @@ from GUI import Application
 import json
 import os
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\nshok\Desktop\Code\Auto Anime Subber\Auto-Subber\stt_key.json"
+authentication = json.load(open("authentication.json"))
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = authentication["Service Account Key Path"]
 print(os.environ["GOOGLE_APPLICATION_CREDENTIALS"])
 
 #TK
