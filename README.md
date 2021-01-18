@@ -14,7 +14,8 @@ A desktop application that takes in a video file and will create subtitles for i
     ```
     Alternatively, you can download and extract the zip file from github.
 
-2. Paste the absolute path to the _.json_ file containing the account key into the _authentication.json_.
+2. Paste the absolute path to the _.json_ file containing the account key into the _authentication.json_. __Note: If your path contains backslashes make sure to use double backslashes instead__
+ > File\Path\With\Backslashes -> File\\\Path\\\With\\\Backslashes
 
 3. Open up command line in your local repository and install the required libraries by running the following command:
     ```
@@ -29,4 +30,4 @@ A desktop application that takes in a video file and will create subtitles for i
 5. Open up video in any media/video player and then select the newly generated _.srt_ file to disaply the subtitles
 
 ## Support
-- [How to create a google platform service account](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
+- [How to create a google platform service account key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
